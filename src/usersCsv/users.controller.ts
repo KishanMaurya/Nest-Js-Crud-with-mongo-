@@ -6,28 +6,32 @@ import {
     Param,
     Patch,
     Delete,
+    UploadedFile, UseInterceptors
   } from '@nestjs/common';
   
   import { UsersService } from './users.service';
+  import { FileInterceptor } from '@nestjs/platform-express';
+  import { MulterModule } from '@nestjs/platform-express';
+  import { Express } from 'express'
   
   @Controller('users')
   export class UsersController {
     constructor(private readonly usersService: UsersService) {}
-  
+
+
+
     @Post()
-    async addProduct(
-      @Body('title') prodTitle: string,
-      @Body('description') prodDesc: string,
-      @Body('price') prodPrice: number,
-    ) {
-  
-      // let createObj={
-      //   title: prodTitle,
-      //   description: prodDesc,
-      //   price: prodPrice
-      // }
-      const generatedId = await this.usersService.insertProduct(prodTitle, prodDesc, prodPrice);
-      return { id: generatedId };
+    @UseInterceptors(FileInterceptor('file'))
+    async addProduct(@UploadedFile() file: Express.Multer.File) {
+
+      console.log(file);
+
+      const result = await this.usersService.insertProduct(file);
+      return { 
+        data: result,
+        status: 200,
+        msg: "success"
+      };
     }
   
     @Get()

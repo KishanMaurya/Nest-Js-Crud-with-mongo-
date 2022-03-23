@@ -11,7 +11,7 @@ import { UsersModule } from './usersCsv/users.module';
     ProductsModule,
     UsersModule,
     MongooseModule.forRoot(
-      'mongodb://localhost:27017/nestJsCSV',
+      'mongodb://localhost:27017/nestCSV',
     ),
   ],
   controllers: [AppController],
